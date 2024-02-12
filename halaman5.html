@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Selesai</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="game-container">
+        <h2>Selamat, Anda telah menyelesaikan game ini!</h2>
+        <p id="finalScore">Total skor Anda: </p>
+        <!-- Tombol Go Back -->
+        <button id="goBackBtn">Go Back</button>
+    </div>
+    <script>
+        // Mengambil skor akhir dari localStorage
+        const finalScore = localStorage.getItem("finalScore");
+        
+        // Menampilkan skor akhir
+        document.getElementById("finalScore").innerText += `${finalScore}`;
+
+        // Menambahkan event listener ke tombol Go Back
+        document.getElementById("goBackBtn").addEventListener("click", function() {
+            window.location.href = 'index.html'; // Sesuaikan jika path ke halaman pertama Anda berbeda
+        });
+    </script>
+     <iframe src="music-player.html" style="display:none;"></iframe>
+</body>
+</html>
