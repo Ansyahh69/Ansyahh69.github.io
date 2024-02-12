@@ -17,7 +17,7 @@
         const finalScore = localStorage.getItem("finalScore");
         
         // Menampilkan skor akhir
-        document.getElementById("finalScore").innerText += `${finalScore}`;
+        document.getElementById("finalScore").innerText += finalScore ? finalScore : "Skor tidak tersedia";
 
         // Menambahkan event listener ke tombol Go Back
         document.getElementById("goBackBtn").addEventListener("click", function() {
