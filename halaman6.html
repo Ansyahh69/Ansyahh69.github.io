@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Halaman Hukuman</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-image: url(background.png);
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+        .wheel-container {
+            position: relative;
+            text-align: center;
+        }
+
+        button {
+            margin-top: 20px;
+            padding: 10px 20px;
+            font-size: 18px;
+            border: none;
+            border-radius: 5px;
+            background-color: #3498db;
+            color: white;
+            cursor: pointer;
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.7); /* Efek cahaya untuk button */
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        button:hover {
+            background-color: #2980b9;
+            transform: scale(1.05);
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.9); /* Efek cahaya yang lebih kuat saat hover */
+        }
+
+        /* Tambahkan CSS untuk roda di sini */
+   
+    </style>
+</head>
+<body>
+    <div class="wheel-container">
+        <canvas id="wheelCanvas" width="500" height="500"></canvas>
+        <button id="spinButton">Putar Roda!</button>
+        <button id="stopButton" style="display:none;">Hentikan Roda!</button>
+    </div>
+    <!-- Script Anda disini -->
+
+
+
+    <script>
+const canvas = document.getElementById('wheelCanvas');
+const ctx = canvas.getContext('2d');
+const spinButton = document.getElementById('spinButton');
+const stopButton = document.getElementById('stopButton');
+const wheelRadius = canvas.width / 2;
+let isSpinning = false;
+let currentAngle = 0;
+let animationFrameId;
+let startAngle = 0;
+let spinTime = 0;
+let spinTimeTotal = 0;
+
+const hukuman = ["Hukuman 1", "Hukuman 2", "Hukuman 3", "Hukuman 4", "Hukuman 5", "Hukuman 6", "Hukuman 7", "Hukuman 8"];
+const colors = ['#E74C3C', '#3498DB', '#F1C40F', '#1ABC9C', '#9B59B6', '#34495E', '#E67E22', '#2ECC71'];
+
+function drawWheel() {
+    const slice = Math.PI * 2 / hukuman.length;
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.save();
+    ctx.translate(wheelRadius, wheelRadius);
+    ctx.rotate(startAngle);
+
+    // Menggambar cahaya di sekitar roda dengan warna ungu
+    ctx.beginPath();
+    ctx.arc(0, 0, wheelRadius + 2, 0, Math.PI * 1, false); // Lingkaran luar untuk efek cahaya, sesuaikan radius sesuai kebutuhan
+    ctx.strokeStyle = "rgba(153, 102, 255, 1)"; // Warna cahaya ungu
+    ctx.lineWidth = 2; // Lebar garis cahaya
+    ctx.stroke();
+
+    // Menggambar segmen roda
+    hukuman.forEach((h, index) => {
+        ctx.beginPath();
+        ctx.moveTo(0, 0);
+        ctx.arc(0, 0, wheelRadius, slice * index, slice * (index + 1));
+        ctx.fillStyle = colors[index];
+        ctx.fill();
+        ctx.stroke();
+
+        ctx.save();
+        ctx.rotate(slice * (index + 0.5));
+        ctx.textAlign = "right";
+        ctx.fillStyle = "#fff"; // Warna teks
+        ctx.fillText(h, wheelRadius - 10, 0); // Posisi teks
+        ctx.restore();
+    });
+
+    ctx.restore();
+    drawArrow();
+}
+
+
+
+function drawArrow() {
+    ctx.fillStyle = 'red';
+    ctx.beginPath();
+    ctx.moveTo(wheelRadius, 5);
+    ctx.lineTo(wheelRadius + 20, 5);
+    ctx.lineTo(wheelRadius, 30);
+    ctx.lineTo(wheelRadius - 20, 5);
+    ctx.closePath();
+    ctx.fill();
+}
+
+function spinWheel() {
+    if (!isSpinning) {
+        isSpinning = true;
+        spinButton.style.display = "none";
+        stopButton.style.display = "inline-block";
+        spinTime = 0;
+        spinTimeTotal = Math.random() * 1000 + 1000 * 1000; // Durasi spin antara 4-7 detik
+        rotateWheel();
+    }
+}
+
+function rotateWheel() {
+    spinTime += 30;
+    if(spinTime >= spinTimeTotal) {
+        stopWheel();
+        return;
+    }
+    const spinAngleStart = Math.random() * 10 + 10;
+    startAngle += (spinAngleStart * Math.PI) / 180; // Convert dari derajat ke radian
+    drawWheel();
+    animationFrameId = requestAnimationFrame(rotateWheel);
+}
+
+function stopWheel() {
+    cancelAnimationFrame(animationFrameId);
+    const degrees = startAngle * 180 / Math.PI + 90;
+    const arcd = Math.PI * 2 / hukuman.length;
+    const index = Math.floor((360 - degrees % 360) / (360 / hukuman.length));
+    
+    alert(`Hukuman: ${hukuman[index]}. Segera lakukan hukumanmu!`);
+    
+    // Menunggu 10 detik setelah menampilkan alert sebelum berpindah halaman
+    setTimeout(() => {
+        window.location.href = 'index.html';
+    }, 10000); // 10000 milidetik = 10 detik
+
+    isSpinning = false;
+    spinButton.style.display = "inline-block";
+    stopButton.style.display = "none";
+    drawWheel(); // Redraw the wheel to ensure the arrow is correctly positioned
+}
+
+
+spinButton.addEventListener('click', spinWheel);
+stopButton.addEventListener('click', stopWheel);
+
+// Menggambar roda pertama kali
+drawWheel();
+</script>
+</body>
+</html>
