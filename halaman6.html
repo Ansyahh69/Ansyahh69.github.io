@@ -80,8 +80,8 @@ function drawWheel() {
 
     // Menggambar cahaya di sekitar roda dengan warna ungu
     ctx.beginPath();
-    ctx.arc(0, 0, wheelRadius + 2, 0, Math.PI * 1, false); // Lingkaran luar untuk efek cahaya, sesuaikan radius sesuai kebutuhan
-    ctx.strokeStyle = "rgba(153, 102, 255, 1)"; // Warna cahaya ungu
+    ctx.arc(0, 0, wheelRadius + 2, 0, Math.PI * 2, false); // Lingkaran luar untuk efek cahaya
+    ctx.strokeStyle = "rgba(153, 102, 255, 0.75)"; // Warna cahaya ungu
     ctx.lineWidth = 2; // Lebar garis cahaya
     ctx.stroke();
 
@@ -98,7 +98,8 @@ function drawWheel() {
         ctx.rotate(slice * (index + 0.5));
         ctx.textAlign = "right";
         ctx.fillStyle = "#fff"; // Warna teks
-        ctx.fillText(h, wheelRadius - 10, 0); // Posisi teks
+        ctx.font = "20px Arial"; // Ubah ukuran font di sini
+        ctx.fillText(h, wheelRadius - 10, 10); // Posisi teks
         ctx.restore();
     });
 
