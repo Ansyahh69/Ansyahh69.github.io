@@ -200,7 +200,7 @@
 },
 {
     question: "Apa itu neraca perdagangan?",
-    choices: ["Nilai ekspor dikurangi impor", "Total utang negara", "Total nilai mata uang dicetak", "Jumlah produk domestik bruto"],
+    choices: ["Nilai ekspor dikurangi impor", "neraca utang negara", "Total nilai mata uang dicetak", "Jumlah produk domestik bruto"],
     answer: "Nilai ekspor dikurangi impor"
 },
 {
@@ -340,16 +340,7 @@
     ],
     correctAnswer: "David Ricardo"
   },
-  {
-    question: "Apa yang dimaksud dengan 'Phillips Curve' dalam ekonomi?",
-    choices: [
-      "Hubungan antara inflasi dan pengangguran",
-      "Kurva permintaan dan penawaran",
-      "Pengaruh pajak terhadap pertumbuhan ekonomi",
-      "Dinamika pasar modal internasional"
-    ],
-    correctAnswer: "Hubungan antara inflasi dan pengangguran"
-  },
+ 
   {
     question: "Dalam ekonomi, 'Pareto Efficiency' mengacu pada kondisi di mana...",
     choices: [
@@ -792,12 +783,12 @@
           displayQuestion();
       } else {
           if (currentLevel <= 10) {
-              alert(`Salah! Jawaban yang benar adalah "${correctAnswer}". Anda akan masuk ke sesi hukuman.`);
+              alert(`Salah! Anda akan masuk ke sesi hukuman.`);
               setTimeout(function() {
                   window.location.href = 'halaman6.html';
-              }, 5000); // Delay 5 detik sebelum mengarahkan
+              }, 5000); 
           } else {
-              alert(`Salah! Jawaban yang benar adalah "${correctAnswer}". Anda kembali ke level 1 dengan skor 0.`);
+              alert(`Salah! Anda kembali ke level 1 dengan skor 0.`);
               resetGame();
           }
       }
@@ -834,4 +825,4 @@
 </script>
 
 </body>
-  </html>
+</html>
