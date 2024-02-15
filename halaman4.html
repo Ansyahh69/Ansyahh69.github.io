@@ -729,98 +729,100 @@
   ];
 
   let questions = [...originalQuestions];
-  let currentLevel = 1;
-  let score = 0;
-  let displayedQuestions = [];
+        let currentLevel = 0;
+        let score = 0;
+        let displayedQuestions = [];
+        let currentQuestion;
 
-  function getRandomQuestion() {
-      if (questions.length === 0) {
-          questions = [...originalQuestions]; // Reset pertanyaan jika semua telah ditampilkan
-          displayedQuestions = [];
-      }
-      const randomIndex = Math.floor(Math.random() * questions.length);
-      const selectedQuestion = questions.splice(randomIndex, 1)[0];
-      displayedQuestions.push(selectedQuestion);
-      return selectedQuestion;
-  }
+        function getRandomQuestion() {
+            if (questions.length === 0) {
+                questions = [...originalQuestions];
+                displayedQuestions = [];
+            }
+            const randomIndex = Math.floor(Math.random() * questions.length);
+            const selectedQuestion = questions.splice(randomIndex, 1)[0];
+            displayedQuestions.push(selectedQuestion);
+            return selectedQuestion;
+        }
 
-  function displayQuestion() {
-      if(currentLevel > 20) {
-          localStorage.setItem("finalScore", score);
-          window.location.href = 'halaman5.html';
-          return;
-      }
+        function displayQuestion() {
+            if(currentLevel > 20) {
+                localStorage.setItem("finalScore", score);
+                window.location.href = 'halaman5.html';
+                return;
+            }
 
-      const questionObj = getRandomQuestion();
-      const questionEl = document.getElementById("question");
-      const choicesForm = document.getElementById("choicesForm");
-      questionEl.innerHTML = `Level ${currentLevel}: ${questionObj.question}`;
+            currentQuestion = getRandomQuestion();
+            const questionEl = document.getElementById("question");
+            const choicesForm = document.getElementById("choicesForm");
+            questionEl.innerHTML = `Level ${currentLevel}: ${currentQuestion.question}`;
 
-      choicesForm.innerHTML = '';
+            choicesForm.innerHTML = '';
 
-      questionObj.choices.forEach(choice => {
-          const label = document.createElement("label");
-          label.innerHTML = `<input type="radio" name="choice" value="${choice}"> ${choice}`;
-          choicesForm.appendChild(label);
-      });
-  }
+            currentQuestion.choices.forEach(choice => {
+                const label = document.createElement("label");
+                label.innerHTML = `<input type="radio" name="choice" value="${choice}"> ${choice}`;
+                choicesForm.appendChild(label);
+            });
+        }
 
-  function checkAnswer() {
-      const selectedChoice = document.querySelector('input[name="choice"]:checked');
-      if (!selectedChoice) return alert("Silakan pilih jawaban.");
+        function checkAnswer() {
+            const selectedChoice = document.querySelector('input[name="choice"]:checked');
+            if (!selectedChoice) {
+                alert("Silakan pilih jawaban.");
+                return;
+            }
 
-      const questionText = document.getElementById("question").textContent;
-      const correctAnswer = displayedQuestions.find(q => `Level ${currentLevel}: ${q.question}` === questionText)?.answer;
+            if (selectedChoice.value === currentQuestion.answer) {
+                score += 5;
+                currentLevel++;
+                displayQuestion();
+            } else {
+                if (currentLevel <= 10) {
+                    alert(`Salah! Jawaban yang benar adalah "${currentQuestion.answer}". Anda akan masuk ke sesi hukuman.`);
+                    setTimeout(function() {
+                        window.location.href = 'halaman6.html';
+                    }, 5000);
+                } else {
+                    alert(`Salah! Jawaban yang benar adalah "${currentQuestion.answer}". Anda kembali ke level 1 dengan skor 0.`);
+                    resetGame();
+                }
+            }
+        }
 
-      if (selectedChoice.value === correctAnswer) {
-          score += 5;
-          currentLevel++;
-          displayQuestion();
-      } else {
-          if (currentLevel <= 10) {
-              alert(`Salah! Anda akan masuk ke sesi hukuman.`);
-              setTimeout(function() {
-                  window.location.href = 'halaman6.html';
-              }, 5000); 
-          } else {
-              alert(`Salah! Anda kembali ke level 1 dengan skor 0.`);
-              resetGame();
-          }
-      }
-  }
+        function skipLevel() {
+            currentLevel++;
+            if (currentLevel > 20) {
+                window.location.href = 'halaman5.html';
+            } else {
+                displayQuestion();
+            }
+        }
 
-  function skipLevel() {
-      currentLevel++;
-      if (currentLevel > 20) {
-          window.location.href = 'halaman5.html';
-      } else {
-          displayQuestion();
-      }
-  }
+        function resetGame() {
+            currentLevel = 1;
+            score = 0;
+            questions = [...originalQuestions];
+            displayedQuestions = [];
+            displayQuestion();
+        }
 
-  function resetGame() {
-    currentLevel = 1; // Mengatur ulang level ke level pertama
-    score = 0; // Mengatur ulang skor menjadi 0
-    questions = [...originalQuestions]; // Mengisi ulang pertanyaan dengan salinan dari originalQuestions
-    displayedQuestions = []; // Mengosongkan array pertanyaan yang sudah ditampilkan
+        document.getElementById("submitBtn").addEventListener("click", function(event) {
+            event.preventDefault();
+            checkAnswer();
+        });
 
-    displayQuestion(); // Menampilkan pertanyaan pertama setelah reset
-}
+        document.getElementById("skipBtn").addEventListener("click", function(event) {
+            event.preventDefault();
+            skipLevel();
+        });
 
+        document.getElementById("resetBtn").addEventListener("click", function(event) {
+            event.preventDefault();
+            resetGame();
+        });
 
-  document.getElementById("submitBtn").addEventListener("click", function(event) {
-      event.preventDefault();
-      checkAnswer();
-  });
-
-  document.getElementById("skipBtn").addEventListener("click", function(event) {
-      event.preventDefault(); 
-      skipLevel();
-  });
-
-  window.onload = displayQuestion;
-  
-</script>
-
+        window.onload = displayQuestion;
+    </script>
 </body>
 </html>
